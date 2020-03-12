@@ -4,6 +4,8 @@ import os
 import random
 from torchvision import transforms
 import numpy as np
+from PIL import Image
+
 
 DATASET_BASE = '/content/Market-1501-v15.09.15/'
 IMG_SIZE = 256
@@ -134,7 +136,7 @@ class Market1501(data.Dataset):
             img = self.transform_test(img)
         return np.array(img, 'float64')
 
-    def nextbatch(self, n = 10, exclude_labelled_Bucket = []):
+    def nextbatch(self, n, exclude_labelled_Bucket = []):
         
         imgs = []
         labels = []

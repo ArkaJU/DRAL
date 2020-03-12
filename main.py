@@ -8,14 +8,14 @@ import torch as T
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-from torchvision import transforms
-from scipy.spatial import distance
-from copy import deepcopy
-import torchvision
-import torch.nn as nn
-import torch.nn.functional as F
 
-Ns = 10
+import torchvision
+from torchvision import transforms
+
+if T.cuda.is_available():                        #change default type else errors pop up, find a better way
+  T.set_default_tensor_type(T.cuda.FloatTensor)
+
+Ns = 30
 input_dims = (Ns+1)*(Ns+1)
 fc1_dims = 256
 fc2_dims = 256
@@ -31,26 +31,16 @@ max_epoch = 30
 
 feature_extractor = model()
 market = Market1501()
-# data_transform_train = transforms.Compose([
-#     transforms.Scale(IMG_SIZE),
-#     transforms.RandomSizedCrop(CROP_SIZE),
-#     transforms.RandomHorizontalFlip(),
-#     transforms.ToTensor(),
-#     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-#     ])
-# dataloader = iter(T.utils.data.DataLoader(
-#         Fashion_inshop(type="train", transform=data_transform_train),
-#         batch_size=1, num_workers=8, pin_memory=True
-#     ))
+
 print("==> Start training")
 for epoch in range(max_epoch):
 
-    query, g, labels = market.nextbatch()
-    #query, g, labels = Next(data_loader)
+    query, g, labels = market.nextbatch(n=30)
+
     #print(labels)
     #print(query.shape)
     #print(g.shape)
-    #g, query = SampleFromDataset()                     #samples Ns images from various classes and query image 
+                  
     g_features = feature_extractor(g)                         #have to take care how the image features are concat->row-wise
     query_feature = feature_extractor(query) 
     #print(f"g_features.shape : {g_features.shape}")
@@ -60,6 +50,7 @@ for epoch in range(max_epoch):
     expected_return = 0
     action_buffer = []
     state = calculate_similarity(T.cat((query_feature, g_features)))
+    #print(f"state:{state.shape}")
     #print(f"Epoch {epoch+1} : {state.shape}")
     for t in range(Kmax):
       #print(query_feature.shape)

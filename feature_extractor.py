@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torchvision
-
+from data_loader import load_model
+import torch as T
 
 class model(nn.Module):
     '''
@@ -12,6 +13,7 @@ class model(nn.Module):
         self.backbone = torchvision.models.resnet50(pretrained=True)
         state_dict = self.backbone.state_dict()
         num_features = self.backbone.fc.in_features
+        #print(f"num_features: { num_features }")
         self.backbone = nn.Sequential(*list(self.backbone.children())[:-2])
         model_dict = self.backbone.state_dict()
         model_dict.update({k: v for k, v in state_dict.items() if k in model_dict})
@@ -32,6 +34,10 @@ class model(nn.Module):
     def forward(self, x):
         x = self.backbone(x)
         pooled = self.avg_pooling(x)
-        inter_out = self.fc(pooled.view(pooled.size(0), -1))
-        out = self.fc2(inter_out)
-        return out
+        #inter_out = self.fc(pooled.view(pooled.size(0), -1))
+        #out = self.fc2(inter_out)
+        pooled = T.squeeze(pooled)
+        if len(list(pooled.shape)) == 1: #reshape from (2048, ) to (1, 2048)
+          pooled = pooled.reshape(1, -1)
+        #print(f"pooled: { pooled.shape }")
+        return pooled

@@ -3,6 +3,8 @@ import torch as T
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from distances import mahalanobis_dist_from_vectors
+
 
 class SimilarityMatrix:
 
@@ -48,7 +50,7 @@ class Agent(nn.Module):   #architecture doubt: Ns=30->flattened state matrix:961
       self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
       self.to(self.device)
 
-      self.sim_mat = SimilarityMatrix(Ns)
+      self.sim_mat = SimilarityMatrix(self.n_actions)
 
   def forward(self, state):
       state = T.Tensor(state).to(self.device)
