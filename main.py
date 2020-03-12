@@ -1,5 +1,5 @@
 from agent import Agent
-from data_loader import Market1501, Next
+from data_loader import Market1501, load_model
 from feature_extractor import model
 from distances import calculate_similarity
 
