@@ -142,19 +142,24 @@ class Market1501(data.Dataset):
 
     def nextbatch(self, n, exclude_labelled_Bucket = []):
         
-        imgs = []
-        labels = []
-        query = []
+        # imgs = []
+        # labels = []
+        # query = []
         
-
         random_sample_indices = self.sample_random_indices(n, exclude_labelled_Bucket)
-        random_sample_indices_for_query = self.sample_random_indices(1, exclude_labelled_Bucket)
+        random_sample_index_for_query = self.sample_random_indices(1, exclude_labelled_Bucket)
         
-        batchimgs = np.stack([self.process_img(impath) for impath in self.imagepaths[random_sample_indices]], 0)
-        batchlabels = self.labels[random_sample_indices]
-        queries = np.stack([self.process_img(impath) for impath in self.imagepaths[random_sample_indices_for_query]], 0)
-        
-        imgs.append(batchimgs)
-        labels.append(batchlabels)
-        query.append(queries)
-        return torch.Tensor(queries), torch.Tensor(batchimgs), torch.Tensor(batchlabels)
+        imgs = np.stack([self.process_img(impath) for impath in self.imagepaths[random_sample_indices]], 0)
+        img_labels = self.labels[random_sample_indices]
+        query = np.stack([self.process_img(impath) for impath in self.imagepaths[random_sample_index_for_query]], 0)
+        query_label = self.labels[random_sample_index_for_query]
+
+        # print(imgs.shape)             #(30, 3, 224, 224)
+        # print(img_labels.shape)       #(30,)
+        # print(query.shape)            #(1, 3, 224, 224)
+        # print(query_label.shape)      #(1,)
+
+        # imgs.append(imgs)
+        # labels.append(img_labels)
+        # query.append(query)
+        return torch.Tensor(query), torch.Tensor(query_label), torch.Tensor(imgs), torch.Tensor(img_labels)

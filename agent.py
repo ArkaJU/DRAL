@@ -16,7 +16,7 @@ class SimilarityMatrix:
   
   #def k_reciprocal(self, k=15):
   
-  def update_distances(self, query_feature, gk_feature):
+  def find_max_min_distances_in_batch(self, query_feature, gk_feature):
     #print(self.min_negative_distance)
     #print(self.max_positive_distance)
     dist = mahalanobis_dist_from_vectors(query_feature, gk_feature.reshape(1,-1))
@@ -71,7 +71,8 @@ class Agent(nn.Module):   #architecture doubt: Ns=30->flattened state matrix:961
 
   def update_state(self, state, label, g_k, threshold=0.4):
     #print(label)
-    if label == 1:
+    #print("**************")
+    if label == True:
       z = (state[:, 0] + state[:, g_k]) / 2
       state[:, 0] = z
       state[0, :] = z
