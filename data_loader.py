@@ -1,3 +1,4 @@
+ 
 import torch.utils.data as data
 import torch
 import os
@@ -31,14 +32,17 @@ class Market1501(data.Dataset):
         self.Batchsize = BATCHSIZE
         self.Type = 'train'
         self.transform = transforms.Compose([
-        transforms.Scale(IMG_SIZE),
-        transforms.RandomSizedCrop(CROP_SIZE),
+        #transforms.Scale(IMG_SIZE),
+        transforms.Resize(IMG_SIZE),
+        #transforms.RandomSizedCrop(CROP_SIZE),
+        transforms.RandomResizedCrop(CROP_SIZE),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
         self.transform_test = transforms.Compose([
-        transforms.Scale(IMG_SIZE),
+        transforms.Resize(IMG_SIZE),
+        #transforms.Scale(IMG_SIZE),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])

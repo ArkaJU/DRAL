@@ -91,9 +91,11 @@ class Agent(nn.Module):   #architecture doubt: Ns=30->flattened state matrix:961
     #assert(np.diagonal(state).any() == False)  #sanity check, diagonal elements should be zero
     return state
   
+  
   def take_unique_action(self, logits, action_buffer):
-    max_so_far = [-1/T.zeros((1,)), 0]
+    max_so_far = [-1/T.zeros((1,)), 0]  #<-[logit, action]
     for i in range(logits.shape[0]):
       if i not in action_buffer and logits[i] > max_so_far[0]:
         max_so_far[0], max_so_far[1] = logits[i], i
-    return max_so_far[1]
+    return max_so_far[1]  
+

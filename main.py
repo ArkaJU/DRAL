@@ -81,4 +81,4 @@ for epoch in range(max_epoch):
     #model = ModelTrain()
     #print(f"Outside inner loop1: {state.shape}")
     agent.sim_mat.reset_distances()
-    print("epoch {}/{}\t reward {}\t".format(epoch+1, max_epoch, expected_return.item()))
+    print(f"epoch {epoch+1}/{max_epoch}\t Expected return: {expected_return.item()}\t")
