@@ -53,11 +53,13 @@ class Agent(nn.Module):   #architecture doubt: Ns=30->flattened state matrix:961
       self.sim_mat = SimilarityMatrix(self.n_actions)
 
   def forward(self, state):
-      state = T.Tensor(state).to(self.device)
+      state = T.Tensor(state).to(self.device)       
+      #print(state.shape)                #torch.Size([961])
       x = F.relu(self.fc1(state))
       x = F.relu(self.fc2(x))
       x = F.relu(self.fc3(x))
       x = F.relu(self.output(x))                            #add activation
+      #print(x.shape)                     #torch.Size([30])
       return x
   
   def compute_reward(self, label, margin=0.2):
